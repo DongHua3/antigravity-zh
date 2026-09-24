@@ -177,7 +177,7 @@ if exist "%TEMP_PATCHED_ASAR%" (
 )
 
 where node >nul 2>&1
-if "%ERRORLEVEL%"=="0" (
+if "!ERRORLEVEL!"=="0" (
     echo [*] [阶段 1/2] 检测到系统 Node.js，优先使用系统 Node.js 打包补丁...
     node "%PATCH_SCRIPT%" --src "%RESOURCES%\app.asar" --dest "%TEMP%\ag_patched.asar"
     set "NODE_EXIT_CODE=!ERRORLEVEL!"
@@ -189,8 +189,8 @@ if "%ERRORLEVEL%"=="0" (
     set "ELECTRON_RUN_AS_NODE="
 )
 
-if not "%NODE_EXIT_CODE%"=="0" (
-    echo [X] 错误: 补丁注入生成失败，退出码: %NODE_EXIT_CODE%
+if not "!NODE_EXIT_CODE!"=="0" (
+    echo [X] 错误: 补丁注入生成失败，退出码: !NODE_EXIT_CODE!
     goto :error
 )
 
