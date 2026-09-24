@@ -305,7 +305,7 @@ function runTier3(t = createTestContext()) {
       t.strictEqual(el2.textContent, '不再显示此提示', 'Must normalize curly apostrophe and translate');
     });
 
-    t.it('Performs 18-character prefix matching on long setting descriptions', () => {
+    t.it('Performs substring sliding match on long descriptive paragraphs (> 15 chars)', () => {
       const env = createMockEnvironment();
       const customDicts = {
         ...dicts,
@@ -316,11 +316,11 @@ function runTier3(t = createTestContext()) {
       };
       const engine = createTranslationHarness(env, customDicts, regexRules);
 
-      // Altered trailing phrasing (where key is not a substring, but shares >= 18 char prefix)
+      // Embedded inside a longer paragraph
       const el = env.document.createElement('P');
-      el.textContent = 'Allow the agent to view and modify files in the repository.';
+      el.textContent = 'Note: Allow the agent to view and edit files in the workspace (recommended).';
       env.document.body.appendChild(el);
-      t.strictEqual(el.textContent, '允许智能体查看和编辑工作区内的文件', 'Must match on 18-char prefix and translate');
+      t.strictEqual(el.textContent, 'Note: 允许智能体查看和编辑工作区内的文件 (recommended).', 'Must match substring for long descriptive sentences');
     });
   });
 
