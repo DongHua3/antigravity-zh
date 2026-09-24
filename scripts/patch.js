@@ -31,16 +31,49 @@ Usage:
   node scripts/patch.js [options]
 
 Options:
-  --src <path>       Path to original app.asar (default: auto-detected in %LOCALAPPDATA%)
-  --dest <path>      Path to output patched asar (default: %TEMP%/ag_patched.asar)
-  --dicts <path>     Path to custom dicts/ directory
-  -v, --verbose      Verbose logging output
-  -h, --help         Show this help message
+  --src <path>          Path to original app.asar (default: auto-detected in %LOCALAPPDATA%)
+  --dest <path>         Path to output patched asar (default: %TEMP%/ag_patched.asar)
+  --dicts <path>        Path to custom dicts/ directory
+  --brand-title <mode>  Top-left brand display mode: english (default) | hidden | translated
+  -v, --verbose         Verbose logging output
+  -h, --help            Show this help message
 
 Examples:
   node scripts/patch.js --src "C:\\path\\to\\app.asar" --dest "C:\\temp\\ag_patched.asar"
+  node scripts/patch.js --brand-title english
   ELECTRON_RUN_AS_NODE=1 Antigravity.exe scripts/patch.js --src app.asar --dest patched.asar
 `);
+}
+
+/**
+ * Cleans Electron's V8 code cache and GPU cache to prevent stale bytecode execution.
+ * @returns {number} Count of cleaned cache directories
+ */
+function cleanElectronCache() {
+  let appSupportDir = '';
+  if (process.platform === 'darwin') {
+    appSupportDir = path.join(os.homedir(), 'Library', 'Application Support', 'Antigravity');
+  } else if (process.platform === 'win32') {
+    const appData = process.env.APPDATA || path.join(os.homedir(), 'AppData', 'Roaming');
+    appSupportDir = path.join(appData, 'Antigravity');
+  } else {
+    appSupportDir = path.join(os.homedir(), '.config', 'Antigravity');
+  }
+
+  if (!fs.existsSync(appSupportDir)) return 0;
+
+  const cacheDirs = ['Cache', 'Code Cache', 'GPUCache', 'DawnWebGPUCache', 'DawnGraphiteCache'];
+  let cleanedCount = 0;
+  for (const c of cacheDirs) {
+    const p = path.join(appSupportDir, c);
+    if (fs.existsSync(p)) {
+      try {
+        fs.rmSync(p, { recursive: true, force: true });
+        cleanedCount++;
+      } catch (_) {}
+    }
+  }
+  return cleanedCount;
 }
 
 /**
@@ -92,6 +125,7 @@ function parseArgs(args) {
     src: null,
     dest: null,
     dictsDir: null,
+    brandTitle: 'english',
     verbose: false,
     help: false
   };
@@ -115,6 +149,10 @@ function parseArgs(args) {
       options.dictsDir = args[++i];
     } else if (arg.startsWith('--dicts=')) {
       options.dictsDir = arg.slice(8);
+    } else if (arg === '--brand-title') {
+      options.brandTitle = args[++i];
+    } else if (arg.startsWith('--brand-title=')) {
+      options.brandTitle = arg.slice(14);
     }
   }
 
@@ -168,9 +206,15 @@ async function main() {
   try {
     await patchAsar(srcPath, destPath, {
       dictsDir: options.dictsDir,
+      brandTitle: options.brandTitle,
       verbose: true,
       logger: (msg) => console.log(msg)
     });
+
+    const cleanedCaches = cleanElectronCache();
+    if (cleanedCaches > 0) {
+      console.log(`[patch] Cleaned ${cleanedCaches} Electron cache directories to ensure immediate activation.`);
+    }
 
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
     console.log(`\n============================================================`);

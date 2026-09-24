@@ -6,3 +6,4 @@ node_modules/
 !test/fixtures/**/*.asar
 .DS_Store
 Thumbs.db
+*-results.json

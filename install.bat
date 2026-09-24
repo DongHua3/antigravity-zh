@@ -179,12 +179,12 @@ if exist "%TEMP_PATCHED_ASAR%" (
 where node >nul 2>&1
 if "!ERRORLEVEL!"=="0" (
     echo [*] [阶段 1/2] 检测到系统 Node.js，优先使用系统 Node.js 打包补丁...
-    node "%PATCH_SCRIPT%" --src "%RESOURCES%\app.asar" --dest "%TEMP%\ag_patched.asar"
+    node "%PATCH_SCRIPT%" --src "%RESOURCES%\app.asar" --dest "%TEMP%\ag_patched.asar" --brand-title english
     set "NODE_EXIT_CODE=!ERRORLEVEL!"
 ) else (
     echo [*] [阶段 1/2] 正在调用 Antigravity 内置 Node.js 环境打包补丁...
     set "ELECTRON_RUN_AS_NODE=1"
-    start /wait "" "%ANTIGRAVITY_EXE%" "%PATCH_SCRIPT%" --src "%RESOURCES%\app.asar" --dest "%TEMP%\ag_patched.asar"
+    start /wait "" "%ANTIGRAVITY_EXE%" "%PATCH_SCRIPT%" --src "%RESOURCES%\app.asar" --dest "%TEMP%\ag_patched.asar" --brand-title english
     set "NODE_EXIT_CODE=!ERRORLEVEL!"
     set "ELECTRON_RUN_AS_NODE="
 )
@@ -220,6 +220,21 @@ move /y "%TEMP%\ag_patched.asar" "%RESOURCES%\app.asar" >nul
 if errorlevel 1 (
     echo [X] 错误: 替换 app.asar 失败！文件可能仍被其他进程锁定，请以管理员身份重试。
     goto :error
+)
+
+if exist "%APPDATA%\Antigravity\Code Cache" (
+    echo [*] 正在清理应用字节码缓存以确保即时生效...
+    rd /s /q "%APPDATA%\Antigravity\Code Cache" >nul 2>&1
+    rd /s /q "%APPDATA%\Antigravity\GPUCache" >nul 2>&1
+    rd /s /q "%APPDATA%\Antigravity\Cache" >nul 2>&1
+)
+
+if exist "%~dp0proxy_config" (
+    echo [*] 检测到 proxy_config 目录，正在同步注入网络代理模块...
+    if exist "%~dp0proxy_config\version.dll" copy /y "%~dp0proxy_config\version.dll" "%AG_DIR%" >nul 2>&1
+    if exist "%~dp0proxy_config\dbghelp.dll" copy /y "%~dp0proxy_config\dbghelp.dll" "%AG_DIR%" >nul 2>&1
+    if exist "%~dp0proxy_config\config.json" copy /y "%~dp0proxy_config\config.json" "%AG_DIR%" >nul 2>&1
+    echo [√] 代理模块已注入至主程序目录。
 )
 
 echo.

@@ -1,6 +1,6 @@
 {
   "name": "antigravity-zh",
-  "version": "2.17.2",
+  "version": "2.17.3",
   "description": "Google Antigravity 2.x Chinese Localization and Patching Tool",
   "main": "scripts/patch.js",
   "scripts": {

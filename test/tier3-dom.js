@@ -250,6 +250,35 @@ function runTier3(t = createTestContext()) {
 
       t.strictEqual(codeSpan.textContent, 'Save', 'Code content inside Monaco shadow root must remain untouched');
     });
+
+    t.it('Translates elements with keyboard shortcut suffixes (translateWithShortcut)', () => {
+      const env = createMockEnvironment();
+      const engine = createTranslationHarness(env, dicts, regexRules);
+
+      const btn = env.document.createElement('BUTTON');
+      btn.textContent = 'File (Ctrl+F)';
+      env.document.body.appendChild(btn);
+
+      t.strictEqual(btn.textContent, '文件 (Ctrl+F)', 'Shortcut suffix should be preserved while label is translated');
+    });
+
+    t.it('Protects syntax tokens, diffEditor, and pack.info skeleton elements', () => {
+      const env = createMockEnvironment();
+      const engine = createTranslationHarness(env, dicts, regexRules);
+
+      const diffLine = env.document.createElement('DIV');
+      diffLine.className = 'code-line diffEditor';
+      diffLine.textContent = 'Save';
+      env.document.body.appendChild(diffLine);
+
+      t.strictEqual(diffLine.textContent, 'Save', 'Code line inside diffEditor must remain untouched');
+
+      const skel = env.document.createElement('DIV');
+      skel.textContent = 'pack.info loading';
+      env.document.body.appendChild(skel);
+
+      t.strictEqual(skel.getAttribute('translate'), 'no', 'Skeleton loader must have translate="no" set');
+    });
   });
 
   return t;

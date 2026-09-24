@@ -180,6 +180,17 @@ echo [√] 原始 app.asar 还原成功。
 echo [*] 正在清理备份与临时文件...
 del /f /q "%RESOURCES%\app.asar.bak" >nul 2>&1
 del /f /q "%TEMP%\ag_patched*.asar" >nul 2>&1
+
+if exist "%AG_DIR%version.dll" del /f /q "%AG_DIR%version.dll" >nul 2>&1
+if exist "%AG_DIR%dbghelp.dll" del /f /q "%AG_DIR%dbghelp.dll" >nul 2>&1
+if exist "%AG_DIR%config.json" del /f /q "%AG_DIR%config.json" >nul 2>&1
+
+if exist "%APPDATA%\Antigravity\Code Cache" (
+    echo [*] 正在清理应用字节码缓存...
+    rd /s /q "%APPDATA%\Antigravity\Code Cache" >nul 2>&1
+    rd /s /q "%APPDATA%\Antigravity\GPUCache" >nul 2>&1
+    rd /s /q "%APPDATA%\Antigravity\Cache" >nul 2>&1
+)
 echo [√] 清理完成。
 
 echo.

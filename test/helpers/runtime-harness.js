@@ -269,8 +269,16 @@ class ReferenceTranslationEngine {
   }
 }
 
+let EngineClass = ReferenceTranslationEngine;
+try {
+  const realEngine = require('../../lib/runtime/engine');
+  if (realEngine && realEngine.TranslationEngine) {
+    EngineClass = realEngine.TranslationEngine;
+  }
+} catch (_) {}
+
 function createTranslationHarness(env, dicts, regexRules) {
-  return new ReferenceTranslationEngine({
+  return new EngineClass({
     window: env.window,
     document: env.document,
     dicts,
