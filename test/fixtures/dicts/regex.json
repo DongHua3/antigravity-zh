@@ -1,0 +1,50 @@
+[
+  {
+    "pattern": "^No\\s+agents?\\s+running$",
+    "flags": "i",
+    "replace": "无正在运行的智能体",
+    "description": "Zero running agents tray/menu status"
+  },
+  {
+    "pattern": "^(\\d+)\\s+agents?\\s+running$",
+    "flags": "i",
+    "replace": "$1 个正在运行的智能体",
+    "description": "N running agents tray/menu status"
+  },
+  {
+    "pattern": "^(\\d+)\\s+files?\\s+changed$",
+    "flags": "i",
+    "replace": "$1 个文件已更改",
+    "description": "File changes counter"
+  },
+  {
+    "pattern": "^(\\d+)\\s+(seconds?|secs?)\\s+ago$",
+    "flags": "i",
+    "replace": "$1 秒前",
+    "description": "Relative seconds timestamp"
+  },
+  {
+    "pattern": "^(\\d+)\\s+(minutes?|mins?)\\s+ago$",
+    "flags": "i",
+    "replace": "$1 分钟前",
+    "description": "Relative minutes timestamp"
+  },
+  {
+    "pattern": "^(\\d+)\\s+(hours?|hrs?)\\s+ago$",
+    "flags": "i",
+    "replace": "$1 小时前",
+    "description": "Relative hours timestamp"
+  },
+  {
+    "pattern": "^Version\\s+(\\d+\\.\\d+\\.\\d+.*)$",
+    "flags": "i",
+    "replace": "版本 $1",
+    "description": "Application version pattern"
+  },
+  {
+    "pattern": "^Setting up WSL:\\s+(.*)$",
+    "flags": "i",
+    "replace": "正在配置 WSL: $1",
+    "description": "WSL setup status"
+  }
+]

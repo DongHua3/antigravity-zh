@@ -1,0 +1,284 @@
+[
+  {
+    "pattern": "^No\\s+agents?\\s+running$",
+    "flags": "i",
+    "replace": "无正在运行的智能体",
+    "description": "托盘与状态栏：无正在运行的智能体"
+  },
+  {
+    "pattern": "^(\\d+)\\s+agents?\\s+running$",
+    "flags": "i",
+    "replace": "$1 个智能体正在运行",
+    "description": "托盘与状态栏：多个正在运行的智能体"
+  },
+  {
+    "pattern": "^(\\d+)\\s+agent\\(s\\)\\s+running$",
+    "flags": "i",
+    "replace": "$1 个智能体正在运行",
+    "description": "托盘与状态栏：智能体运行数 (带括号形式)"
+  },
+  {
+    "pattern": "^(\\d+)\\s+active\\s+agents?$",
+    "flags": "i",
+    "replace": "$1 个活跃智能体",
+    "description": "侧边栏：活跃智能体计数"
+  },
+  {
+    "pattern": "^(\\d+)\\s+agents?\\s+active$",
+    "flags": "i",
+    "replace": "$1 个智能体活跃",
+    "description": "侧边栏：智能体活跃状态"
+  },
+  {
+    "pattern": "^(\\d+)\\s+background\\s+agents?$",
+    "flags": "i",
+    "replace": "$1 个后台智能体",
+    "description": "侧边栏：后台智能体计数"
+  },
+  {
+    "pattern": "^(\\d+)\\s+files?\\s+changed$",
+    "flags": "i",
+    "replace": "$1 个文件已更改",
+    "description": "Git / 审查变更：文件更改数"
+  },
+  {
+    "pattern": "^(\\d+)\\s+files?\\s+modified$",
+    "flags": "i",
+    "replace": "$1 个文件已修改",
+    "description": "代码变更：文件已修改数"
+  },
+  {
+    "pattern": "^(\\d+)\\s+files?\\s+added$",
+    "flags": "i",
+    "replace": "$1 个文件已添加",
+    "description": "代码变更：文件已添加数"
+  },
+  {
+    "pattern": "^(\\d+)\\s+files?\\s+deleted$",
+    "flags": "i",
+    "replace": "$1 个文件已删除",
+    "description": "代码变更：文件已删除数"
+  },
+  {
+    "pattern": "^(\\d+)\\s+insertions?\\(\\+\\)$",
+    "flags": "i",
+    "replace": "$1 处添加(+)",
+    "description": "代码差异：添加行数"
+  },
+  {
+    "pattern": "^(\\d+)\\s+deletions?\\(-\\)$",
+    "flags": "i",
+    "replace": "$1 处删除(-)",
+    "description": "代码差异：删除行数"
+  },
+  {
+    "pattern": "^(\\d+)\\s+pending\\s+changes?$",
+    "flags": "i",
+    "replace": "$1 处待处理更改",
+    "description": "代码变更：待处理更改数"
+  },
+  {
+    "pattern": "^(\\d+)\\s+(?:seconds?|secs?)\\s+ago$",
+    "flags": "i",
+    "replace": "$1 秒前",
+    "description": "时间戳：秒前"
+  },
+  {
+    "pattern": "^(\\d+)\\s+(?:minutes?|mins?)\\s+ago$",
+    "flags": "i",
+    "replace": "$1 分钟前",
+    "description": "时间戳：分钟前"
+  },
+  {
+    "pattern": "^(\\d+)\\s+(?:hours?|hrs?)\\s+ago$",
+    "flags": "i",
+    "replace": "$1 小时前",
+    "description": "时间戳：小时前"
+  },
+  {
+    "pattern": "^(\\d+)\\s+days?\\s+ago$",
+    "flags": "i",
+    "replace": "$1 天前",
+    "description": "时间戳：天前"
+  },
+  {
+    "pattern": "^(\\d+)\\s+weeks?\\s+ago$",
+    "flags": "i",
+    "replace": "$1 周前",
+    "description": "时间戳：周前"
+  },
+  {
+    "pattern": "^(\\d+)\\s+months?\\s+ago$",
+    "flags": "i",
+    "replace": "$1 个月前",
+    "description": "时间戳：月前"
+  },
+  {
+    "pattern": "^(\\d+)\\s+years?\\s+ago$",
+    "flags": "i",
+    "replace": "$1 年前",
+    "description": "时间戳：年前"
+  },
+  {
+    "pattern": "^just\\s+now$",
+    "flags": "i",
+    "replace": "刚刚",
+    "description": "时间戳：刚刚"
+  },
+  {
+    "pattern": "^in\\s+(\\d+)\\s+(?:seconds?|secs?)$",
+    "flags": "i",
+    "replace": "$1 秒后",
+    "description": "倒计时：秒后"
+  },
+  {
+    "pattern": "^in\\s+(\\d+)\\s+(?:minutes?|mins?)$",
+    "flags": "i",
+    "replace": "$1 分钟后",
+    "description": "倒计时：分钟后"
+  },
+  {
+    "pattern": "^in\\s+(\\d+)\\s+(?:hours?|hrs?)$",
+    "flags": "i",
+    "replace": "$1 小时后",
+    "description": "倒计时：小时后"
+  },
+  {
+    "pattern": "^Version\\s+(\\d+\\.\\d+\\.\\d+.*)$",
+    "flags": "i",
+    "replace": "版本 $1",
+    "description": "版本号显示"
+  },
+  {
+    "pattern": "^Setting up WSL:\\s+(.*)$",
+    "flags": "i",
+    "replace": "正在配置 WSL: $1",
+    "description": "WSL 安装向导标题"
+  },
+  {
+    "pattern": "^Installing into\\s+(.*)[…\\.]{1,3}$",
+    "flags": "i",
+    "replace": "正在安装至 $1…",
+    "description": "WSL 安装进度状态"
+  },
+  {
+    "pattern": "^Downloading\\s+(.*)[…\\.]{1,3}$",
+    "flags": "i",
+    "replace": "正在下载 $1…",
+    "description": "下载进度状态"
+  },
+  {
+    "pattern": "^Step\\s+(\\d+)\\s+of\\s+(\\d+)$",
+    "flags": "i",
+    "replace": "第 $1 步，共 $2 步",
+    "description": "向导与工作流步骤指示"
+  },
+  {
+    "pattern": "^(\\d+)\\s+steps?\\s+remaining$",
+    "flags": "i",
+    "replace": "剩余 $1 步",
+    "description": "工作流剩余步数"
+  },
+  {
+    "pattern": "^(\\d+)\\s+steps?\\s+completed$",
+    "flags": "i",
+    "replace": "已完成 $1 步",
+    "description": "工作流已完成步数"
+  },
+  {
+    "pattern": "^(\\d+)\\s+tasks?\\s+completed$",
+    "flags": "i",
+    "replace": "已完成 $1 个任务",
+    "description": "任务已完成数"
+  },
+  {
+    "pattern": "^(\\d+)\\s+tasks?\\s+remaining$",
+    "flags": "i",
+    "replace": "剩余 $1 个任务",
+    "description": "任务剩余数"
+  },
+  {
+    "pattern": "^(\\d+)\\s+tokens?$",
+    "flags": "i",
+    "replace": "$1 个令牌",
+    "description": "模型 Token 消耗计数"
+  },
+  {
+    "pattern": "^(\\d+)\\s+characters?$",
+    "flags": "i",
+    "replace": "$1 个字符",
+    "description": "字符计数"
+  },
+  {
+    "pattern": "^Ln\\s+(\\d+),\\s*Col\\s+(\\d+)$",
+    "flags": "i",
+    "replace": "行 $1，列 $2",
+    "description": "编辑器行列状态指示 (Ln, Col)"
+  },
+  {
+    "pattern": "^Line\\s+(\\d+),\\s*Column\\s+(\\d+)$",
+    "flags": "i",
+    "replace": "第 $1 行，第 $2 列",
+    "description": "编辑器行列状态指示 (Line, Column)"
+  },
+  {
+    "pattern": "^(\\d+)\\s+lines?\\s+selected$",
+    "flags": "i",
+    "replace": "已选择 $1 行",
+    "description": "已选定行数指示"
+  },
+  {
+    "pattern": "^(\\d+)\\s+results?\\s+found$",
+    "flags": "i",
+    "replace": "找到 $1 个结果",
+    "description": "搜索结果计数"
+  },
+  {
+    "pattern": "^(\\d+)\\s+problems?\\s+found$",
+    "flags": "i",
+    "replace": "发现 $1 个问题",
+    "description": "问题面板计数"
+  },
+  {
+    "pattern": "^(\\d+)\\s+errors?,\\s*(\\d+)\\s+warnings?$",
+    "flags": "i",
+    "replace": "$1 个错误，$2 个警告",
+    "description": "问题面板：错误与警告数"
+  },
+  {
+    "pattern": "^(\\d+)\\s+errors?$",
+    "flags": "i",
+    "replace": "$1 个错误",
+    "description": "错误数"
+  },
+  {
+    "pattern": "^(\\d+)\\s+warnings?$",
+    "flags": "i",
+    "replace": "$1 个警告",
+    "description": "警告数"
+  },
+  {
+    "pattern": "^(\\d+)\\s+infos?$",
+    "flags": "i",
+    "replace": "$1 条提示",
+    "description": "信息提示数"
+  },
+  {
+    "pattern": "^Open\\s+(.+)$",
+    "flags": "i",
+    "replace": "打开 $1",
+    "description": "动态打开动作 (如 Open Antigravity)"
+  },
+  {
+    "pattern": "^Quit\\s+(.+)$",
+    "flags": "i",
+    "replace": "退出 $1",
+    "description": "动态退出动作 (如 Quit Antigravity)"
+  },
+  {
+    "pattern": "^Close\\s+(.+)$",
+    "flags": "i",
+    "replace": "关闭 $1",
+    "description": "动态关闭动作"
+  }
+]

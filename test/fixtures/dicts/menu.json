@@ -1,0 +1,14 @@
+{
+  "File": "文件",
+  "Edit": "编辑",
+  "View": "视图",
+  "Window": "窗口",
+  "Help": "帮助",
+  "New Window": "新建窗口",
+  "Connect to WSL": "连接到 WSL",
+  "Reopen Locally": "在本地重新打开",
+  "Docs": "文档",
+  "Open Antigravity": "打开 Antigravity",
+  "Quit": "退出",
+  "Toggle Developer Tools": "切换开发者工具"
+}

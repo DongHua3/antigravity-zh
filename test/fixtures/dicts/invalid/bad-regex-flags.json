@@ -1,0 +1,7 @@
+[
+  {
+    "pattern": "test",
+    "flags": "invalid_flags_123",
+    "replace": "测试"
+  }
+]

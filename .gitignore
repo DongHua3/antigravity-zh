@@ -1,0 +1,8 @@
+node_modules/
+*.log
+*.tmp
+*.bak
+*.asar
+!test/fixtures/**/*.asar
+.DS_Store
+Thumbs.db

@@ -1,0 +1,7 @@
+[
+  {
+    "pattern": "([a-z",
+    "flags": "i",
+    "replace": "test"
+  }
+]
