@@ -234,6 +234,22 @@ function runTier3(t = createTestContext()) {
 
       t.strictEqual(shadowBtn.textContent, '确认', 'Text inside closed shadow root must be translated');
     });
+
+    t.it('Strictly protects code elements even when nested inside ShadowRoot', () => {
+      const env = createMockEnvironment();
+      const engine = createTranslationHarness(env, dicts, regexRules);
+
+      const editorHost = env.document.createElement('DIV');
+      editorHost.className = 'monaco-editor';
+      env.document.body.appendChild(editorHost);
+
+      const shadow = editorHost.attachShadow({ mode: 'open' });
+      const codeSpan = env.document.createElement('SPAN');
+      codeSpan.textContent = 'Save';
+      shadow.appendChild(codeSpan);
+
+      t.strictEqual(codeSpan.textContent, 'Save', 'Code content inside Monaco shadow root must remain untouched');
+    });
   });
 
   return t;

@@ -68,8 +68,23 @@ for %%R in (
         for /f "tokens=2*" %%a in ('reg query %%R /s /f "Antigravity" 2^>nul ^| findstr /i "DisplayIcon InstallLocation"') do (
             if not defined ANTIGRAVITY_EXE (
                 set "RAW_REG_VAL=%%b"
-                for /f "tokens=1 delims=," %%x in ("!RAW_REG_VAL!") do (
-                    set "REG_PATH=%%~x"
+                set "RAW_REG_VAL=!RAW_REG_VAL:"=!"
+                set "REG_PATH="
+                if exist "!RAW_REG_VAL!" (
+                    set "REG_PATH=!RAW_REG_VAL!"
+                ) else if exist "!RAW_REG_VAL!\Antigravity.exe" (
+                    set "REG_PATH=!RAW_REG_VAL!\Antigravity.exe"
+                ) else (
+                    set "CANDIDATE=!RAW_REG_VAL!"
+                    if "!CANDIDATE:~-2,1!"=="," set "CANDIDATE=!CANDIDATE:~0,-2!"
+                    if "!CANDIDATE:~-3,1!"=="," set "CANDIDATE=!CANDIDATE:~0,-3!"
+                    if exist "!CANDIDATE!" (
+                        set "REG_PATH=!CANDIDATE!"
+                    ) else if exist "!CANDIDATE!\Antigravity.exe" (
+                        set "REG_PATH=!CANDIDATE!\Antigravity.exe"
+                    )
+                )
+                if defined REG_PATH (
                     for %%I in ("!REG_PATH!") do (
                         if /i "%%~nxI"=="Antigravity.exe" (
                             if exist "%%~fI" (

@@ -65,6 +65,19 @@ async function runTests() {
   assert(matchesSubmenu('帮助', 'Help') === true, 'matches 帮助 to Help');
   assert(matchesSubmenu('Edit', 'Unknown') === false, 'does not match unrelated labels');
 
+  // Synthetic menu fallback snippet
+  const syntheticMenu = `
+function addItemToSubmenu(appMenu, submenuLabel, position, item) {
+    const submenuItem = appMenu.items.find((item) => item.label === submenuLabel);
+    if (!submenuItem?.submenu) return;
+    submenuItem.submenu.insert(position, item);
+}
+return { label: 'Connect to WSL', submenu };
+return { label: 'Reopen Locally', click: () => {} };
+addItemToSubmenu(menu, 'File', 0, new electron_1.MenuItem({ label: 'New Window' }));
+addItemToSubmenu(menu, 'Help', 0, new electron_1.MenuItem({ label: 'Docs' }));
+`;
+
   // Test patching sample menu.js from workspace root
   const sampleMenuPath = path.join(__dirname, '..', '..', 'menu.js');
   if (fs.existsSync(sampleMenuPath)) {
@@ -82,17 +95,6 @@ async function runTests() {
     assert(doublePatched === patchedSample, 'patchMenu is idempotent');
   } else {
     console.warn('  [skip] Sample menu.js not found at workspace root, testing synthetic snippet');
-    const syntheticMenu = `
-function addItemToSubmenu(appMenu, submenuLabel, position, item) {
-    const submenuItem = appMenu.items.find((item) => item.label === submenuLabel);
-    if (!submenuItem?.submenu) return;
-    submenuItem.submenu.insert(position, item);
-}
-return { label: 'Connect to WSL', submenu };
-return { label: 'Reopen Locally', click: () => {} };
-addItemToSubmenu(menu, 'File', 0, new electron_1.MenuItem({ label: 'New Window' }));
-addItemToSubmenu(menu, 'Help', 0, new electron_1.MenuItem({ label: 'Docs' }));
-`;
     const patched = patchMenu(syntheticMenu);
     assert(patched.includes('SUBMENU_LABEL_ALIASES'), 'synthetic menu contains SUBMENU_LABEL_ALIASES');
     assert(patched.includes('连接到 WSL'), 'synthetic menu contains localized Connect to WSL');
@@ -100,6 +102,26 @@ addItemToSubmenu(menu, 'Help', 0, new electron_1.MenuItem({ label: 'Docs' }));
     assert(patched.includes('新建窗口'), 'synthetic menu contains localized New Window');
     assert(patched.includes('文档'), 'synthetic menu contains localized Docs');
   }
+
+  // Adversarial: Test replaceFunction with escaped backslashes, regex literals, and indentation
+  const adversarialMenu = `
+function addItemToSubmenu(appMenu, submenuLabel, position, item) {
+    const esc = "C:\\\\";
+    const reg = /\\{test\\}/g;
+    /* comment with { and } */
+    // line comment with {
+    if (appMenu) {
+        return { ok: true };
+    }
+}
+function subsequentFunction() {
+    return 'do not delete me';
+}
+`;
+  const patchedAdv = patchMenu(adversarialMenu);
+  assert(patchedAdv.includes('SUBMENU_LABEL_ALIASES'), 'adversarial menu contains SUBMENU_LABEL_ALIASES');
+  assert(patchedAdv.includes('subsequentFunction'), 'subsequentFunction is preserved and not swallowed');
+  assert(patchedAdv.includes('do not delete me'), 'subsequent code preserved 100%');
 
   // -------------------------------------------------------------
   // Test 2: lib/patches/tray.js

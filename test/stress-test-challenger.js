@@ -549,10 +549,16 @@ console.log(`  FINAL VERDICT: \x1b[${verdict === 'APPROVE' ? '32' : '31'}m${verd
 console.log('============================================================\n');
 
 // Write out JSON results for reporting
-fs.writeFileSync(
-  path.join(__dirname, '..', '..', '.agents', 'teamwork', 'challenger_2', 'stress-results.json'),
-  JSON.stringify(results, null, 2),
-  'utf8'
-);
+try {
+  const targetDir = path.join(__dirname, '..', '..', '.agents', 'teamwork', 'challenger_2');
+  if (fs.existsSync(path.dirname(targetDir))) {
+    fs.mkdirSync(targetDir, { recursive: true });
+    fs.writeFileSync(path.join(targetDir, 'stress-results.json'), JSON.stringify(results, null, 2), 'utf8');
+  } else {
+    fs.writeFileSync(path.join(__dirname, 'stress-results.json'), JSON.stringify(results, null, 2), 'utf8');
+  }
+} catch (err) {
+  // Silent fallback for test reporting
+}
 
 process.exit(totalFailed > 0 ? 1 : 0);

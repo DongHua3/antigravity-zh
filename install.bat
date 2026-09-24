@@ -68,8 +68,23 @@ for %%R in (
         for /f "tokens=2*" %%a in ('reg query %%R /s /f "Antigravity" 2^>nul ^| findstr /i "DisplayIcon InstallLocation"') do (
             if not defined ANTIGRAVITY_EXE (
                 set "RAW_REG_VAL=%%b"
-                for /f "tokens=1 delims=," %%x in ("!RAW_REG_VAL!") do (
-                    set "REG_PATH=%%~x"
+                set "RAW_REG_VAL=!RAW_REG_VAL:"=!"
+                set "REG_PATH="
+                if exist "!RAW_REG_VAL!" (
+                    set "REG_PATH=!RAW_REG_VAL!"
+                ) else if exist "!RAW_REG_VAL!\Antigravity.exe" (
+                    set "REG_PATH=!RAW_REG_VAL!\Antigravity.exe"
+                ) else (
+                    set "CANDIDATE=!RAW_REG_VAL!"
+                    if "!CANDIDATE:~-2,1!"=="," set "CANDIDATE=!CANDIDATE:~0,-2!"
+                    if "!CANDIDATE:~-3,1!"=="," set "CANDIDATE=!CANDIDATE:~0,-3!"
+                    if exist "!CANDIDATE!" (
+                        set "REG_PATH=!CANDIDATE!"
+                    ) else if exist "!CANDIDATE!\Antigravity.exe" (
+                        set "REG_PATH=!CANDIDATE!\Antigravity.exe"
+                    )
+                )
+                if defined REG_PATH (
                     for %%I in ("!REG_PATH!") do (
                         if /i "%%~nxI"=="Antigravity.exe" (
                             if exist "%%~fI" (
@@ -161,11 +176,18 @@ if exist "%TEMP_PATCHED_ASAR%" (
     del /f /q "%TEMP_PATCHED_ASAR%" >nul 2>&1
 )
 
-echo [*] [阶段 1/2] 正在调用 Antigravity 内置 Node.js 环境打包补丁...
-set "ELECTRON_RUN_AS_NODE=1"
-start /wait "" "%ANTIGRAVITY_EXE%" "%PATCH_SCRIPT%" --src "%RESOURCES%\app.asar" --dest "%TEMP%\ag_patched.asar"
-set "NODE_EXIT_CODE=%ERRORLEVEL%"
-set "ELECTRON_RUN_AS_NODE="
+where node >nul 2>&1
+if "%ERRORLEVEL%"=="0" (
+    echo [*] [阶段 1/2] 检测到系统 Node.js，优先使用系统 Node.js 打包补丁...
+    node "%PATCH_SCRIPT%" --src "%RESOURCES%\app.asar" --dest "%TEMP%\ag_patched.asar"
+    set "NODE_EXIT_CODE=!ERRORLEVEL!"
+) else (
+    echo [*] [阶段 1/2] 正在调用 Antigravity 内置 Node.js 环境打包补丁...
+    set "ELECTRON_RUN_AS_NODE=1"
+    start /wait "" "%ANTIGRAVITY_EXE%" "%PATCH_SCRIPT%" --src "%RESOURCES%\app.asar" --dest "%TEMP%\ag_patched.asar"
+    set "NODE_EXIT_CODE=!ERRORLEVEL!"
+    set "ELECTRON_RUN_AS_NODE="
+)
 
 if not "%NODE_EXIT_CODE%"=="0" (
     echo [X] 错误: 补丁注入生成失败，退出码: %NODE_EXIT_CODE%

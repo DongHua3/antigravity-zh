@@ -28,6 +28,14 @@ class MockNode {
     return false;
   }
 
+  getRootNode() {
+    let curr = this;
+    while (curr.parentNode) {
+      curr = curr.parentNode;
+    }
+    return curr;
+  }
+
   appendChild(child) {
     if (child.parentNode) {
       child.parentNode.removeChild(child);

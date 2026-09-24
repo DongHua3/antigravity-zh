@@ -107,19 +107,28 @@ class ReferenceTranslationEngine {
 
   isProtected(node) {
     if (!node) return true;
-    const element = node.nodeType === 1 ? node : node.parentElement;
-    if (!element) return false;
+    let curr = node.nodeType === 1 ? node : node.parentElement;
+    if (!curr) return false;
 
-    if (PROTECTED_TAGS.has(element.tagName)) {
-      return true;
-    }
+    while (curr) {
+      if (PROTECTED_TAGS.has(curr.tagName)) {
+        return true;
+      }
 
-    if (element.isContentEditable) {
-      return true;
-    }
+      if (curr.isContentEditable) {
+        return true;
+      }
 
-    if (element.closest && element.closest(PROTECTED_SELECTORS)) {
-      return true;
+      if (curr.closest && curr.closest(PROTECTED_SELECTORS)) {
+        return true;
+      }
+
+      const root = typeof curr.getRootNode === 'function' ? curr.getRootNode() : null;
+      if (root && root !== curr && root.host) {
+        curr = root.host;
+      } else {
+        break;
+      }
     }
 
     return false;

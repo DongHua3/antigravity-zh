@@ -151,6 +151,31 @@ function runTier4(t = createTestContext()) {
       env.document.body.appendChild(span2);
       t.strictEqual(span2.textContent, '编辑', 'Translation works after second session ends');
     });
+
+    t.it('Buffers and replays background UI mutations that occurred during active IME composition', () => {
+      const { createTranslationHarness: createProdHarness } = require('../lib/runtime/engine');
+      const env = createMockEnvironment();
+      const engine = createProdHarness(env, dicts, regexRules);
+
+      // Start IME session
+      env.window.dispatchEvent({ type: 'compositionstart' });
+      t.strictEqual(engine.isImeComposing, true);
+
+      // Background UI update arrives while typing
+      const bgCard = env.document.createElement('SPAN');
+      bgCard.textContent = 'Settings';
+      env.document.body.appendChild(bgCard);
+
+      // During IME, translation is suspended
+      t.strictEqual(bgCard.textContent, 'Settings', 'Must be buffered and not mutated while composing');
+
+      // User commits IME
+      env.window.dispatchEvent({ type: 'compositionend' });
+      t.strictEqual(engine.isImeComposing, false);
+
+      // The buffered background UI update is now replayed and translated
+      t.strictEqual(bgCard.textContent, '设置', 'Buffered mutation must be translated upon compositionend');
+    });
   });
 
   return t;

@@ -52,26 +52,31 @@ function discoverDefaultAppAsar() {
 
   if (process.env.LOCALAPPDATA) {
     candidates.push(
+      path.join(process.env.LOCALAPPDATA, 'Programs', 'antigravity', 'resources', 'app.asar'),
       path.join(process.env.LOCALAPPDATA, 'Programs', 'Antigravity', 'resources', 'app.asar')
+    );
+  }
+
+  if (process.env.USERPROFILE) {
+    candidates.push(
+      path.join(process.env.USERPROFILE, 'AppData', 'Local', 'Programs', 'antigravity', 'resources', 'app.asar'),
+      path.join(process.env.USERPROFILE, 'AppData', 'Local', 'Programs', 'Antigravity', 'resources', 'app.asar')
     );
   }
 
   if (process.env['ProgramFiles']) {
     candidates.push(
+      path.join(process.env['ProgramFiles'], 'antigravity', 'resources', 'app.asar'),
       path.join(process.env['ProgramFiles'], 'Antigravity', 'resources', 'app.asar')
     );
   }
 
   if (process.env['ProgramFiles(x86)']) {
     candidates.push(
+      path.join(process.env['ProgramFiles(x86)'], 'antigravity', 'resources', 'app.asar'),
       path.join(process.env['ProgramFiles(x86)'], 'Antigravity', 'resources', 'app.asar')
     );
   }
-
-  // Also check local test / inspect directory if present
-  candidates.push(
-    'C:\\Users\\henry\\AppData\\Local\\Programs\\Antigravity\\resources\\app.asar'
-  );
 
   for (const c of candidates) {
     if (fs.existsSync(c)) {
