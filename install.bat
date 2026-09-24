@@ -171,6 +171,20 @@ if not exist "%PATCH_SCRIPT%" (
     goto :error
 )
 
+rem 预先确保官方纯净备份就绪，并始终基于纯净原版生成补丁
+if not exist "%RESOURCES%\app.asar.bak" (
+    echo [*] 正在备份原始官方 app.asar 到 app.asar.bak ...
+    copy /y "%RESOURCES%\app.asar" "%RESOURCES%\app.asar.bak" >nul
+    if errorlevel 1 (
+        echo [X] 错误: 备份 app.asar 失败！请检查写入权限或以管理员身份运行。
+        goto :error
+    )
+    echo [√] 原始备份已就绪: "%RESOURCES%\app.asar.bak"
+) else (
+    echo [*] 已检测到官方纯净备份，基于纯净原版生成补丁: "%RESOURCES%\app.asar.bak"
+)
+set "INPUT_ASAR=%RESOURCES%\app.asar.bak"
+
 set "TEMP_PATCHED_ASAR=%TEMP%\ag_patched.asar"
 if exist "%TEMP_PATCHED_ASAR%" (
     del /f /q "%TEMP_PATCHED_ASAR%" >nul 2>&1
@@ -179,12 +193,12 @@ if exist "%TEMP_PATCHED_ASAR%" (
 where node >nul 2>&1
 if "!ERRORLEVEL!"=="0" (
     echo [*] [阶段 1/2] 检测到系统 Node.js，优先使用系统 Node.js 打包补丁...
-    node "%PATCH_SCRIPT%" --src "%RESOURCES%\app.asar" --dest "%TEMP%\ag_patched.asar" --brand-title english
+    node "%PATCH_SCRIPT%" --src "!INPUT_ASAR!" --dest "%TEMP%\ag_patched.asar" --brand-title english
     set "NODE_EXIT_CODE=!ERRORLEVEL!"
 ) else (
     echo [*] [阶段 1/2] 正在调用 Antigravity 内置 Node.js 环境打包补丁...
     set "ELECTRON_RUN_AS_NODE=1"
-    start /wait "" "%ANTIGRAVITY_EXE%" "%PATCH_SCRIPT%" --src "%RESOURCES%\app.asar" --dest "%TEMP%\ag_patched.asar" --brand-title english
+    start /wait "" "%ANTIGRAVITY_EXE%" "%PATCH_SCRIPT%" --src "!INPUT_ASAR!" --dest "%TEMP%\ag_patched.asar" --brand-title english
     set "NODE_EXIT_CODE=!ERRORLEVEL!"
     set "ELECTRON_RUN_AS_NODE="
 )
@@ -202,19 +216,7 @@ if not exist "%TEMP%\ag_patched.asar" (
 echo [√] 阶段 1 完成: 成功生成补丁包于临时目录。
 echo.
 
-echo [*] [阶段 2/2] Node 进程已安全退出，执行原子备份与替换...
-if not exist "%RESOURCES%\app.asar.bak" (
-    echo [*] 正在备份原始 app.asar 到 app.asar.bak ...
-    copy /y "%RESOURCES%\app.asar" "%RESOURCES%\app.asar.bak" >nul
-    if errorlevel 1 (
-        echo [X] 错误: 备份 app.asar 失败！请检查写入权限或以管理员身份运行。
-        goto :error
-    )
-    echo [√] 原始备份已就绪: "%RESOURCES%\app.asar.bak"
-) else (
-    echo [*] 已存在原始备份，保留初始版本: "%RESOURCES%\app.asar.bak"
-)
-
+echo [*] [阶段 2/2] Node 进程已安全退出，执行原子替换...
 echo [*] 正在写入汉化补丁文件...
 move /y "%TEMP%\ag_patched.asar" "%RESOURCES%\app.asar" >nul
 if errorlevel 1 (
@@ -222,12 +224,12 @@ if errorlevel 1 (
     goto :error
 )
 
-if exist "%APPDATA%\Antigravity\Code Cache" (
-    echo [*] 正在清理应用字节码缓存以确保即时生效...
-    rd /s /q "%APPDATA%\Antigravity\Code Cache" >nul 2>&1
-    rd /s /q "%APPDATA%\Antigravity\GPUCache" >nul 2>&1
-    rd /s /q "%APPDATA%\Antigravity\Cache" >nul 2>&1
-)
+echo [*] 正在清理应用字节码与图形缓存以避免字节码与着色器冲突...
+if exist "%APPDATA%\Antigravity\Cache" rd /s /q "%APPDATA%\Antigravity\Cache" >nul 2>&1
+if exist "%APPDATA%\Antigravity\Code Cache" rd /s /q "%APPDATA%\Antigravity\Code Cache" >nul 2>&1
+if exist "%APPDATA%\Antigravity\GPUCache" rd /s /q "%APPDATA%\Antigravity\GPUCache" >nul 2>&1
+if exist "%APPDATA%\Antigravity\DawnWebGPUCache" rd /s /q "%APPDATA%\Antigravity\DawnWebGPUCache" >nul 2>&1
+if exist "%APPDATA%\Antigravity\DawnGraphiteCache" rd /s /q "%APPDATA%\Antigravity\DawnGraphiteCache" >nul 2>&1
 
 if exist "%~dp0proxy_config" (
     echo [*] 检测到 proxy_config 目录，正在同步注入网络代理模块...

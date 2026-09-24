@@ -185,12 +185,12 @@ if exist "%AG_DIR%version.dll" del /f /q "%AG_DIR%version.dll" >nul 2>&1
 if exist "%AG_DIR%dbghelp.dll" del /f /q "%AG_DIR%dbghelp.dll" >nul 2>&1
 if exist "%AG_DIR%config.json" del /f /q "%AG_DIR%config.json" >nul 2>&1
 
-if exist "%APPDATA%\Antigravity\Code Cache" (
-    echo [*] 正在清理应用字节码缓存...
-    rd /s /q "%APPDATA%\Antigravity\Code Cache" >nul 2>&1
-    rd /s /q "%APPDATA%\Antigravity\GPUCache" >nul 2>&1
-    rd /s /q "%APPDATA%\Antigravity\Cache" >nul 2>&1
-)
+echo [*] 正在清理应用字节码与图形缓存...
+if exist "%APPDATA%\Antigravity\Cache" rd /s /q "%APPDATA%\Antigravity\Cache" >nul 2>&1
+if exist "%APPDATA%\Antigravity\Code Cache" rd /s /q "%APPDATA%\Antigravity\Code Cache" >nul 2>&1
+if exist "%APPDATA%\Antigravity\GPUCache" rd /s /q "%APPDATA%\Antigravity\GPUCache" >nul 2>&1
+if exist "%APPDATA%\Antigravity\DawnWebGPUCache" rd /s /q "%APPDATA%\Antigravity\DawnWebGPUCache" >nul 2>&1
+if exist "%APPDATA%\Antigravity\DawnGraphiteCache" rd /s /q "%APPDATA%\Antigravity\DawnGraphiteCache" >nul 2>&1
 echo [√] 清理完成。
 
 echo.

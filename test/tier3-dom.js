@@ -322,6 +322,31 @@ function runTier3(t = createTestContext()) {
       env.document.body.appendChild(el);
       t.strictEqual(el.textContent, 'Note: 允许智能体查看和编辑工作区内的文件 (recommended).', 'Must match substring for long descriptive sentences');
     });
+
+    t.it('Deeply pierces existing custom elements with node.shadowRoot during sweeps and processSubtree', () => {
+      const env = createMockEnvironment();
+      const customEl = env.document.createElement('AG-APPEARANCE-VIEW');
+      // Create shadow root before harness initializes
+      const sr = customEl.attachShadow({ mode: 'open' });
+      const titleSpan = env.document.createElement('H2');
+      titleSpan.textContent = 'Appearance';
+      const descP = env.document.createElement('P');
+      descP.textContent = "Configure the agent's visual theme and editor settings";
+      const themeLabel = env.document.createElement('LABEL');
+      themeLabel.textContent = 'Theme';
+      sr.appendChild(titleSpan);
+      sr.appendChild(descP);
+      sr.appendChild(themeLabel);
+      env.document.body.appendChild(customEl);
+
+      // Now create engine harness
+      const engine = createTranslationHarness(env, dicts, regexRules);
+      engine.translateEntireDocument();
+
+      t.strictEqual(titleSpan.textContent, '外观', 'Must translate title inside shadowRoot');
+      t.strictEqual(descP.textContent, '配置智能体的视觉主题与编辑器设置', 'Must translate description inside shadowRoot');
+      t.strictEqual(themeLabel.textContent, '主题', 'Must translate label inside shadowRoot');
+    });
   });
 
   return t;
