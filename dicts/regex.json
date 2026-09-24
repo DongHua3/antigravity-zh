@@ -280,5 +280,179 @@
     "flags": "i",
     "replace": "关闭 $1",
     "description": "动态关闭动作"
+  },
+  {
+    "pattern": "^(?:Refreshes|You have (?:used (?:some|all) of|reached) your (?:weekly|5-hour) limit, it will fully refresh) in (\\d+) days?, (\\d+) hours?\\.?$",
+    "flags": "i",
+    "replace": "额度将在 $1 天 $2 小时后完全刷新",
+    "description": "配额限制刷新：天与小时"
+  },
+  {
+    "pattern": "^(?:Refreshes|You have (?:used (?:some|all) of|reached) your (?:weekly|5-hour) limit, it will fully refresh) in (\\d+) hours?, (\\d+) minutes?\\.?$",
+    "flags": "i",
+    "replace": "额度将在 $1 小时 $2 分钟后完全刷新",
+    "description": "配额限制刷新：小时与分钟"
+  },
+  {
+    "pattern": "^(?:Refreshes|You have (?:used (?:some|all) of|reached) your (?:weekly|5-hour) limit, it will fully refresh) in (\\d+) days?\\.?$",
+    "flags": "i",
+    "replace": "额度将在 $1 天后完全刷新",
+    "description": "配额限制刷新：天"
+  },
+  {
+    "pattern": "^(?:Refreshes|You have (?:used (?:some|all) of|reached) your (?:weekly|5-hour) limit, it will fully refresh) in (\\d+) hours?\\.?$",
+    "flags": "i",
+    "replace": "额度将在 $1 小时后完全刷新",
+    "description": "配额限制刷新：小时"
+  },
+  {
+    "pattern": "^(?:Refreshes|You have (?:used (?:some|all) of|reached) your (?:weekly|5-hour) limit, it will fully refresh) in (\\d+) minutes?\\.?$",
+    "flags": "i",
+    "replace": "额度将在 $1 分钟后完全刷新",
+    "description": "配额限制刷新：分钟"
+  },
+  {
+    "pattern": "^(?:Refreshes|You have (?:used (?:some|all) of|reached) your (?:weekly|5-hour) limit, it will fully refresh) in less than a minute\\.?$",
+    "flags": "i",
+    "replace": "额度将在不足 1 分钟后完全刷新",
+    "description": "配额限制刷新：不足一分钟"
+  },
+  {
+    "pattern": "^(?:Refreshes|You have (?:used (?:some|all) of|reached) your (?:weekly|5-hour) limit, it will fully refresh) in a few seconds\\.?$",
+    "flags": "i",
+    "replace": "额度将在几秒后完全刷新",
+    "description": "配额限制刷新：几秒"
+  },
+  {
+    "pattern": "^Learn more about (.+)$",
+    "flags": "i",
+    "replace": "了解更多关于 $1",
+    "description": "了解更多详情链接"
+  },
+  {
+    "pattern": "^Yes, and always allow '(.+)' in this project$",
+    "flags": "i",
+    "replace": "是，且在此项目中始终允许运行 '$1'",
+    "description": "终端命令权限：项目内始终允许"
+  },
+  {
+    "pattern": "^Yes, and always allow '(.+)'$",
+    "flags": "i",
+    "replace": "是，且始终允许运行 '$1'",
+    "description": "终端命令权限：始终允许"
+  },
+  {
+    "pattern": "^(\\d+) tools? enabled$",
+    "flags": "i",
+    "replace": "$1 个工具已启用",
+    "description": "MCP 工具启用计数"
+  },
+  {
+    "pattern": "^Show\\s+(\\d+)\\s+more\\s+results?(\\.\\.\\.|…)?$",
+    "flags": "i",
+    "replace": "显示另外 $1 个结果...",
+    "description": "显示更多结果"
+  },
+  {
+    "pattern": "^Show\\s+(\\d+)\\s+more\\s+commands?(\\.\\.\\.|…)?$",
+    "flags": "i",
+    "replace": "显示另外 $1 个命令...",
+    "description": "显示更多命令"
+  },
+  {
+    "pattern": "^Show\\s+(\\d+)\\s+more\\s+items?(\\.\\.\\.|…)?$",
+    "flags": "i",
+    "replace": "显示另外 $1 个项目...",
+    "description": "显示更多项目"
+  },
+  {
+    "pattern": "^Show\\s+(\\d+)\\s+more\\s+options?(\\.\\.\\.|…)?$",
+    "flags": "i",
+    "replace": "显示另外 $1 个选项...",
+    "description": "显示更多选项"
+  },
+  {
+    "pattern": "^Show\\s+(\\d+)\\s+more(\\.\\.\\.|…)?$",
+    "flags": "i",
+    "replace": "显示另外 $1 个...",
+    "description": "显示另外几个"
+  },
+  {
+    "pattern": "^See all\\s*\\((\\d+)\\)$",
+    "flags": "i",
+    "replace": "查看全部 ($1)",
+    "description": "查看全部计数"
+  },
+  {
+    "pattern": "^Available AI Credits:\\s*(\\d+)$",
+    "flags": "i",
+    "replace": "可用 AI 额度: $1",
+    "description": "AI 额度余额"
+  },
+  {
+    "pattern": "^Version\\s+([\\d\\.]+)$",
+    "flags": "i",
+    "replace": "版本 $1",
+    "description": "版本号显示"
+  },
+  {
+    "pattern": "^(\\d+)(s|m|h|d|w|mo|yr)$",
+    "flags": "i",
+    "replace": "$1$2前",
+    "description": "简写相对时间戳"
+  },
+  {
+    "pattern": "^(.+?): context deadline exceeded$",
+    "flags": "i",
+    "replace": "$1: 请求超时 (context deadline exceeded)",
+    "description": "网络请求超时"
+  },
+  {
+    "pattern": "^(.+?): i/o timeout$",
+    "flags": "i",
+    "replace": "$1: I/O 超时 (i/o timeout)",
+    "description": "IO 超时"
+  },
+  {
+    "pattern": "^Are you sure you want to delete (?:the |this )?project (.+?)\\??$",
+    "flags": "i",
+    "replace": "您确定要删除项目 $1 吗？",
+    "description": "删除项目确认"
+  },
+  {
+    "pattern": "^(?:Permanently delete\\s+)?(.+?)\\s+including\\s+(\\d+)\\s+active conversations?([.。])?$",
+    "flags": "i",
+    "replace": "永久删除 $1（包含 $2 个活跃会话）",
+    "description": "永久删除包含活跃会话的项目"
+  },
+  {
+    "pattern": "^including\\s+(\\d+)\\s+active conversations?([.。])?$",
+    "flags": "i",
+    "replace": "包含 $1 个活跃会话",
+    "description": "包含活跃会话数"
+  },
+  {
+    "pattern": "^(\\d+)\\s+active conversations?([.。])?$",
+    "flags": "i",
+    "replace": "$1 个活跃会话",
+    "description": "活跃会话计数"
+  },
+  {
+    "pattern": "^The (.+?) remote MCP server lets you access and run (.+?) tools to (.+)$",
+    "flags": "i",
+    "replace": "$1 远程 MCP 服务器可让您访问并运行 $2 工具以进行管理与操作。",
+    "description": "远程 MCP 服务器功能描述"
+  },
+  {
+    "pattern": "^The (.+?) remote MCP server lets you manage (.+) resources\\.?$",
+    "flags": "i",
+    "replace": "$1 远程 MCP 服务器可让您管理 $2 资源。",
+    "description": "远程 MCP 服务器资源管理描述"
+  },
+  {
+    "pattern": "^Send feedback as(?:\\s+(.+))?$",
+    "flags": "i",
+    "replace": "以 $1 身份发送反馈",
+    "description": "反馈发送身份"
   }
 ]

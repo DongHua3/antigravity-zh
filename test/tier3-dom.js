@@ -279,6 +279,49 @@ function runTier3(t = createTestContext()) {
 
       t.strictEqual(skel.getAttribute('translate'), 'no', 'Skeleton loader must have translate="no" set');
     });
+
+    t.it('Normalizes multi-line text nodes and typographic smart quotes', () => {
+      const env = createMockEnvironment();
+      const customDicts = {
+        ...dicts,
+        common: {
+          ...dicts.common,
+          "Don't show this again": "不再显示此提示",
+          "Configure settings for the current workspace": "配置当前工作区的设置"
+        }
+      };
+      const engine = createTranslationHarness(env, customDicts, regexRules);
+
+      // Multiline text node
+      const el1 = env.document.createElement('P');
+      el1.textContent = '\n  Configure settings for\n  the current workspace\n';
+      env.document.body.appendChild(el1);
+      t.strictEqual(el1.textContent.trim(), '配置当前工作区的设置', 'Must normalize multi-line whitespace and translate');
+
+      // Typographic curly apostrophe (’ vs ')
+      const el2 = env.document.createElement('SPAN');
+      el2.textContent = 'Don’t show this again';
+      env.document.body.appendChild(el2);
+      t.strictEqual(el2.textContent, '不再显示此提示', 'Must normalize curly apostrophe and translate');
+    });
+
+    t.it('Performs 18-character prefix matching on long setting descriptions', () => {
+      const env = createMockEnvironment();
+      const customDicts = {
+        ...dicts,
+        settings: {
+          ...dicts.settings,
+          "Allow the agent to view and edit files in the workspace": "允许智能体查看和编辑工作区内的文件"
+        }
+      };
+      const engine = createTranslationHarness(env, customDicts, regexRules);
+
+      // Altered trailing phrasing (where key is not a substring, but shares >= 18 char prefix)
+      const el = env.document.createElement('P');
+      el.textContent = 'Allow the agent to view and modify files in the repository.';
+      env.document.body.appendChild(el);
+      t.strictEqual(el.textContent, '允许智能体查看和编辑工作区内的文件', 'Must match on 18-char prefix and translate');
+    });
   });
 
   return t;
